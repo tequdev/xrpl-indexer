@@ -37,6 +37,7 @@
     "@types/supertest": "^6.0.0",
     "@vitest/coverage-v8": "^1.6.0",
     "eslint": "^8.42.0",
+    "lefthook": "^1.6.18",
     "supertest": "^6.3.3",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.3",
