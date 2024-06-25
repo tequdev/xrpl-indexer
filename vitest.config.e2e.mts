@@ -1,5 +1,5 @@
-import swc from 'unplugin-swc';
-import { defineConfig } from 'vitest/config';
+import swc from 'unplugin-swc'
+import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
@@ -8,4 +8,4 @@ export default defineConfig({
     root: './',
   },
   plugins: [swc.vite()],
-});
+})
