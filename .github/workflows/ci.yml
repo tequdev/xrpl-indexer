@@ -1,0 +1,30 @@
+name: test
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: './package.json'
+      - name: clean install
+        run: npm ci
+      - name: test
+        run: npm run test
+
+  test-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: './package.json'
+      - name: clean install
+        run: npm ci
+      - name: test
+        run: npm run test:e2e
