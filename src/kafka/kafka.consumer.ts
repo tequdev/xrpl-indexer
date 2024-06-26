@@ -63,7 +63,7 @@ export abstract class KafkaConsumer implements OnModuleInit, OnModuleDestroy {
   /**
    * Handler processing
    */
-  abstract handler(message: KafkaMessage): void;
+  abstract handler(key: string, value: any): void;
 
   /**
    * Handler pre-processing
@@ -94,7 +94,7 @@ export abstract class KafkaConsumer implements OnModuleInit, OnModuleDestroy {
   private execute(partition: number, message: KafkaMessage): void {
     this.actionBeforeHandler();
     if (this.isUniqueProcess()) {
-      this.handler(message);
+      this.handler(message.key.toString(), JSON.parse(message.value.toString()));
     } else {
       this.logger.warn(`Duplicate processing of ${this.consumerGroupName}`);
     }

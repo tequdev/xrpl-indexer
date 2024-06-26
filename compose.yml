@@ -1,5 +1,28 @@
 services:
   # -------------------------- #
+  # Elasticsearch
+  # -------------------------- #
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.0.0
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - http.port=9200
+      - http.cors.enabled=true
+      - http.cors.allow-origin=http://localhost:1358,http://127.0.0.1:1358
+      - http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+      - http.cors.allow-credentials=true
+      - bootstrap.memory_lock=true
+    container_name: elasticsearch
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  # -------------------------- #
   # Zookeeper
   # -------------------------- #
   zookeeper:
@@ -12,6 +35,7 @@ services:
     tty: true
     networks: 
       - kafka_network
+
   # -------------------------- #
   # Kafka(Broker)
   # -------------------------- #
@@ -34,6 +58,7 @@ services:
     tty: true
     networks: 
       - kafka_network
+
   # -------------------------- #
   # Kafka UI
   # -------------------------- #
@@ -50,5 +75,17 @@ services:
       - KAFKA_CLUSTERS_0_READONLY=false
     networks: 
       - kafka_network
+
+  # -------------------------- #
+  # dejavu
+  # -------------------------- #
+  dejavu:
+    image: appbaseio/dejavu:3.2.3
+    container_name: dejavu
+    ports:
+      - '1358:1358'
+    links:
+      - elasticsearch
+      
 networks:
   kafka_network:
