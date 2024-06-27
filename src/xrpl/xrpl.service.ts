@@ -7,7 +7,7 @@ import configuration from 'src/config/configuration';
 export class XRPLService implements OnModuleInit, OnModuleDestroy {
   client: XrplClient
   constructor(private configService: ConfigService<typeof configuration>) {
-    this.client = new XrplClient('wss://xrpl.ws')
+    this.client = new XrplClient()
   }
   async onModuleInit() {
     const definitions = await this.client.definitions()

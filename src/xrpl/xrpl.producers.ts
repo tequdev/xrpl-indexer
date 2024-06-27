@@ -3,6 +3,10 @@ import { KafkaProducer } from 'src/kafka/kafka.producer';
 import { XRPLService } from './xrpl.service';
 import { ConfigService } from '@nestjs/config';
 import configuration from 'src/config/configuration';
+import { TransactionStream, LedgerStream } from 'src/types/xrpl'
+import { LedgerConsumerValue } from 'src/types/consumers/ledger';
+import { TransactionConsumerValue } from 'src/types/consumers/transaction';
+import { rippleEpochToISO } from 'src/utils/xrpl';
 
 type Stream = 'consensus' | 'ledger' | 'manifests' | 'peer_status' | 'transactions' | 'transactions_proposed' | 'server' | 'validations'
 
@@ -23,13 +27,13 @@ export class XRPLProducer extends KafkaProducer {
       command: 'subscribe',
       streams: this.streams
     })
-    this.xrplService.client.on('transaction', (transaction) => {
+    this.xrplService.client.on('transaction', (transaction: TransactionStream) => {
       const result = this.transactionStreamHandler(transaction)
-      this.send('transaction', result.key, result.value)
+      this.send('transaction', result.key, result.value satisfies TransactionConsumerValue)
     })
-    this.xrplService.client.on('ledger', (ledger) => {
+    this.xrplService.client.on('ledger', (ledger: LedgerStream) => {
       const result = this.ledgerStreamHandler(ledger)
-      this.send('ledger', result.key, result.value)
+      this.send('ledger', result.key.toString(), result.value satisfies LedgerConsumerValue)
     })
   }
 
@@ -56,7 +60,7 @@ export class XRPLProducer extends KafkaProducer {
     return target
   }
 
-  transactionStreamHandler(data: any): Record<string, any> {
+  transactionStreamHandler(data: TransactionStream) {
     return {
       key: data.transaction.hash,
       value: {
@@ -64,15 +68,19 @@ export class XRPLProducer extends KafkaProducer {
         ledger_index: data.ledger_index,
         close_time_iso: data.close_time_iso,
         meta: this.replaceNativeAmountFields(data.meta),
-      }
+      } satisfies TransactionConsumerValue
     }
   }
-  ledgerStreamHandler(ledger: any): Record<string, any> {
+  ledgerStreamHandler(ledger: LedgerStream) {
     return {
       key: ledger.ledger_index,
       value: {
-        ...ledger
-      }
+        ledger_index: ledger.ledger_index,
+        ledger_hash: ledger.ledger_hash,
+        txn_count: ledger.txn_count,
+        ledger_time: ledger.ledger_time,
+        ledger_time_iso: rippleEpochToISO(ledger.ledger_time)
+      } satisfies LedgerConsumerValue
     }
   }
 }

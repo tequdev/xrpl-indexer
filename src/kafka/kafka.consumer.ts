@@ -69,15 +69,15 @@ export abstract class KafkaConsumer implements OnModuleInit, OnModuleDestroy {
    * Handler pre-processing
    */
   private actionBeforeHandler(): void {
-    this.logger.log(`Start processing ${this.consumerGroupName}`);
-    this.logger.log(`Get messages from ${this.consumerTopicName}`);
+    this.logger.debug(`Start processing ${this.consumerGroupName}`);
+    this.logger.debug(`Get messages from ${this.consumerTopicName}`);
   }
 
   /**
    * Handler post-processing
    */
   private actionAfterHandler(): void {
-    this.logger.log(`End processing ${this.consumerGroupName}`);
+    this.logger.debug(`End processing ${this.consumerGroupName}`);
   }
 
   /**
