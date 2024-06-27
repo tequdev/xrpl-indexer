@@ -11,7 +11,8 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({
       isGlobal: true
     }),
-    AppModule, LedgerConsumerModule, TransactionConsumerModule, XRPLModule],
+    LedgerConsumerModule, TransactionConsumerModule, XRPLModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

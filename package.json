@@ -12,6 +12,7 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "cli": "nest start -c nest-cli.command.json --",
     "lint": "biome lint --write .",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -27,6 +28,7 @@
     "@nestjs/elasticsearch": "^10.0.1",
     "@nestjs/platform-express": "^10.0.0",
     "kafkajs": "^2.2.4",
+    "nest-commander": "^3.13.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "xrpl-client": "^2.4.0"

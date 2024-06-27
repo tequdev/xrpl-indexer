@@ -12,7 +12,7 @@ export class TransactionConsumer extends KafkaConsumer {
     this.consumerTopicName = 'transaction';
   }
   handler(key: string, value: any): void {
-    this.logger.warn(value)
+    this.logger.log(key)
 
     this.dataStoreService.add('transaction', key, value)
     /**

@@ -9,16 +9,16 @@ type Stream = 'consensus' | 'ledger' | 'manifests' | 'peer_status' | 'transactio
 @Injectable()
 export class XRPLProducer extends KafkaProducer {
   producerGroupName = 'XRPLProducer';
-  private readonly streams: Stream[] = ['transactions', 'ledger'];
+  streams: Stream[] = ['transactions', 'ledger'];
 
   /**
    * Constructor
    */
-  constructor(private readonly xrplService: XRPLService, private readonly ConfigService: ConfigService<typeof configuration>) {
+  constructor(protected xrplService: XRPLService, protected configService: ConfigService<typeof configuration>) {
     super()
   }
 
-  listen() {
+  async listen() {
     this.xrplService.client.send({
       command: 'subscribe',
       streams: this.streams
@@ -34,10 +34,10 @@ export class XRPLProducer extends KafkaProducer {
   }
 
   get amountTypeFields() {
-    return this.ConfigService.get('amount_type_fields').split(',')
+    return this.configService.get('amount_type_fields').split(',')
   }
   get nativeCurrencyCode() {
-    return this.ConfigService.get('native_currency_code')
+    return this.configService.get('native_currency_code')
   }
 
   replaceNativeAmountFields(target: any) {
