@@ -15,7 +15,8 @@ export class LedgerConsumer extends KafkaConsumer {
   handler(key: string, value: LedgerConsumerValue): void {
     this.logger.log(`${value.ledger_index}: ${value.ledger_time_iso}`)
 
-    this.dataStoreService.add('ledger', key, value)
+    const indexName = `ledger-${Math.trunc(value.ledger_index / 1_000_000)}m`
+    this.dataStoreService.add(indexName, key, value)
     /**
      * Write Consumer-specific logic
      */

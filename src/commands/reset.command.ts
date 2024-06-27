@@ -20,8 +20,7 @@ export class ResetCommand extends CommandRunner {
 
   async run(inputs: string[], options: CommandOptions): Promise<void> {
     console.log('Running Reset command')
-    await this.dataStoreService.deleteLedgers(options.from, options.to)
-    await this.dataStoreService.deleteTransactions(options.from, options.to)
+    await this.dataStoreService.deleteAllIndicesFromRange(options.from, options.to)
     process.exit(0)
   }
 

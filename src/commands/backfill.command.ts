@@ -17,13 +17,6 @@ export class BackfillCommand extends CommandRunner {
   constructor(private readonly xrplBackfillProducer: XRPLBackfillProducer, private readonly config: ConfigService<typeof configuration>) {
     super()
   }
-  async onModuleInit() {
-    await this.xrplBackfillProducer.onModuleInit()
-  }
-
-  async onModuleDestroy() {
-    await this.xrplBackfillProducer.onModuleDestroy()
-  }
 
   async run(inputs: string[], options: CommandOptions): Promise<void> {
     console.log('Running BackfillCommand')

@@ -8,7 +8,7 @@ export class DataStoreService {
   async statsIndexes() {
     return await this.elasticsearchService.cat.indices({
       v: true,
-      s: ['store.size:asc', 'index:asc']
+      s: ['index:asc', 'store.size:asc']
     })
   }
 
@@ -26,25 +26,19 @@ export class DataStoreService {
     )
   }
 
-  private async deleteFromRange(indexName: string, ledger_index_from: number, ledger_index_to: number) {
-    await this.elasticsearchService.deleteByQuery(
+  public async deleteAllIndicesFromRange(ledger_index_from: number, ledger_index_to: number) {
+    const result = await this.elasticsearchService.deleteByQuery(
       {
-        index: indexName,
+        index: "*",
         query: {
           range: {
             ledger_index: {
-              lte: ledger_index_from,
-              gte: ledger_index_to
+              gte: ledger_index_from,
+              lte: ledger_index_to,
             }
           }
         }
       }
     )
-  }
-  async deleteTransactions(ledger_index_from: number, ledger_index_to: number) {
-    await this.deleteFromRange('transaction', ledger_index_from, ledger_index_to)
-  }
-  async deleteLedgers(ledger_index_from: number, ledger_index_to: number) {
-    await this.deleteFromRange('ledger', ledger_index_from, ledger_index_to)
   }
 }

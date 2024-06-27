@@ -14,7 +14,8 @@ export class TransactionConsumer extends KafkaConsumer {
   }
   handler(key: string, value: TransactionConsumerValue): void {
     this.logger.log(`${value.ledger_index}: ${key}`)
-    this.dataStoreService.add('transaction', key, value)
+    const indexName = `transaction-${Math.trunc(value.ledger_index / 1_000_000)}m`
+    this.dataStoreService.add(indexName, key, value)
     /**
      * Write Consumer-specific logic
      */

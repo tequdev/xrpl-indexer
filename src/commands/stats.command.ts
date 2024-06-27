@@ -1,8 +1,6 @@
-import { XRPLBackfillProducer } from 'src/xrpl/xrpl-backfill.producers';
 import { ConfigService } from '@nestjs/config';
-import { CommandRunner, Command, Option } from 'nest-commander';
+import { CommandRunner, Command } from 'nest-commander';
 import configuration from 'src/config/configuration';
-import { Injectable } from '@nestjs/common';
 import { DataStoreService } from 'src/dataStore/dataStore.service';
 
 type CommandOptions = {

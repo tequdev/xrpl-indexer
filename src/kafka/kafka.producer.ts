@@ -1,10 +1,9 @@
 import {
-  Injectable,
   Logger,
   OnModuleDestroy,
   OnModuleInit,
 } from '@nestjs/common';
-import { Kafka, Producer } from 'kafkajs';
+import { Kafka, Partitioners, Producer } from 'kafkajs';
 
 /**
  * Base class for KafkaProducer
@@ -36,13 +35,12 @@ export abstract class KafkaProducer implements OnModuleInit, OnModuleDestroy {
   async onModuleInit() {
     this.logger.log(`starting ${this.producerGroupName} ...`);
 
-    this.producer = this.kafka.producer();
+    this.producer = this.kafka.producer({ createPartitioner: Partitioners.DefaultPartitioner });
 
     await this.producer.connect();
     this.listen();
 
     this.logger.log(`${this.producerGroupName} has started`);
-
   }
 
   async onModuleDestroy() {
