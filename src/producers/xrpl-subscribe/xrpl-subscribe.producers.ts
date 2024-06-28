@@ -1,31 +1,42 @@
-import { Injectable } from '@nestjs/common';
-import { KafkaProducer } from 'src/kafka/kafka.producer';
-import { XRPLService } from '../../xrpl/xrpl.service';
-import { ConfigService } from '@nestjs/config';
-import configuration from 'src/config/configuration';
-import { TransactionStream, LedgerStream } from 'src/types/xrpl'
-import { LedgerConsumerValue } from 'src/types/consumers/ledger';
-import { TransactionConsumerValue } from 'src/types/consumers/transaction';
-import { rippleEpochToISO } from 'src/utils/xrpl';
+import { Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import configuration from 'src/config/configuration'
+import { KafkaProducer } from 'src/kafka/kafka.producer'
+import { LedgerConsumerValue } from 'src/types/consumers/ledger'
+import { TransactionConsumerValue } from 'src/types/consumers/transaction'
+import { LedgerStream, TransactionStream } from 'src/types/xrpl'
+import { rippleEpochToISO } from 'src/utils/xrpl'
+import { XRPLService } from '../../xrpl/xrpl.service'
 
-type Stream = 'consensus' | 'ledger' | 'manifests' | 'peer_status' | 'transactions' | 'transactions_proposed' | 'server' | 'validations'
+type Stream =
+  | 'consensus'
+  | 'ledger'
+  | 'manifests'
+  | 'peer_status'
+  | 'transactions'
+  | 'transactions_proposed'
+  | 'server'
+  | 'validations'
 
 @Injectable()
 export class XRPLProducer extends KafkaProducer {
-  producerGroupName = 'XRPLProducer';
-  streams: Stream[] = ['transactions', 'ledger'];
+  producerGroupName = 'XRPLProducer'
+  streams: Stream[] = ['transactions', 'ledger']
 
   /**
    * Constructor
    */
-  constructor(protected xrplService: XRPLService, protected configService: ConfigService<typeof configuration>) {
+  constructor(
+    protected xrplService: XRPLService,
+    protected configService: ConfigService<typeof configuration>,
+  ) {
     super()
   }
 
   async listen() {
     this.xrplService.client.send({
       command: 'subscribe',
-      streams: this.streams
+      streams: this.streams,
     })
     this.xrplService.client.on('transaction', (transaction: TransactionStream) => {
       const result = this.transactionStreamHandler(transaction)
@@ -46,9 +57,9 @@ export class XRPLProducer extends KafkaProducer {
 
   replaceNativeAmountFields(target: any) {
     if (typeof target === 'object') {
-      for (let key in target) {
+      for (const key in target) {
         if (typeof target[key] === 'object') {
-          this.replaceNativeAmountFields(target[key]);
+          this.replaceNativeAmountFields(target[key])
         } else if (this.amountTypeFields.includes(key)) {
           target[key] = {
             currency: this.nativeCurrencyCode,
@@ -68,7 +79,7 @@ export class XRPLProducer extends KafkaProducer {
         ledger_index: data.ledger_index,
         close_time_iso: data.close_time_iso,
         meta: this.replaceNativeAmountFields(data.meta),
-      } satisfies TransactionConsumerValue
+      } satisfies TransactionConsumerValue,
     }
   }
   ledgerStreamHandler(ledger: LedgerStream) {
@@ -79,8 +90,8 @@ export class XRPLProducer extends KafkaProducer {
         ledger_hash: ledger.ledger_hash,
         txn_count: ledger.txn_count,
         ledger_time: ledger.ledger_time,
-        ledger_time_iso: rippleEpochToISO(ledger.ledger_time)
-      } satisfies LedgerConsumerValue
+        ledger_time_iso: rippleEpochToISO(ledger.ledger_time),
+      } satisfies LedgerConsumerValue,
     }
   }
 }
