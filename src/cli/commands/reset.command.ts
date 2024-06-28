@@ -1,12 +1,12 @@
-import { ConfigService } from '@nestjs/config';
-import { CommandRunner, Command, Option } from 'nest-commander';
-import configuration from 'src/config/configuration';
-import { DataStoreService } from 'src/dataStore/dataStore.service';
+import { ConfigService } from '@nestjs/config'
+import { Command, CommandRunner, Option } from 'nest-commander'
+import configuration from 'src/config/configuration'
+import { DataStoreService } from 'src/dataStore/dataStore.service'
 
 type CommandOptions = {
-  from?: number;
+  from?: number
   to?: number
-};
+}
 
 @Command({
   name: 'reset',
@@ -14,7 +14,10 @@ type CommandOptions = {
   subCommands: [],
 })
 export class ResetCommand extends CommandRunner {
-  constructor(private readonly dataStoreService: DataStoreService, private readonly config: ConfigService<typeof configuration>) {
+  constructor(
+    private readonly dataStoreService: DataStoreService,
+    private readonly config: ConfigService<typeof configuration>,
+  ) {
     super()
   }
 
@@ -30,9 +33,9 @@ export class ResetCommand extends CommandRunner {
     required: true,
   })
   parseFrom(val: string) {
-    const v = parseInt(val);
-    if (isNaN(v)) throw new Error('`-f / --from` should be a number');
-    return parseInt(val);
+    const v = parseInt(val)
+    if (isNaN(v)) throw new Error('`-f / --from` should be a number')
+    return parseInt(val)
   }
 
   @Option({
@@ -41,8 +44,8 @@ export class ResetCommand extends CommandRunner {
     required: true,
   })
   parseTo(val: string) {
-    const v = parseInt(val);
-    if (isNaN(v)) throw new Error('`-t / --to` should be a number');
-    return parseInt(val);
+    const v = parseInt(val)
+    if (isNaN(v)) throw new Error('`-t / --to` should be a number')
+    return parseInt(val)
   }
 }

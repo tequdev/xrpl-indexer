@@ -1,10 +1,10 @@
-import { Module } from '@nestjs/common';
-import { XRPLBackfillProducer } from './xrpl-backfill.producers';
-import { XRPLService } from '../../xrpl/xrpl.service';
+import { Module } from '@nestjs/common'
+import { XRPLService } from '../../xrpl/xrpl.service'
+import { XRPLBackfillProducer } from './xrpl-backfill.producers'
 
 @Module({
   imports: [],
   providers: [XRPLBackfillProducer, XRPLService],
-  exports: [XRPLBackfillProducer]
+  exports: [XRPLBackfillProducer],
 })
-export class XRPLBackfillModule { }
+export class XRPLBackfillModule {}

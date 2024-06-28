@@ -13,7 +13,5 @@ describe('AppController', () => {
 
     appController = app.get<AppController>(AppController)
   })
-  describe.todo('root', () => {
-
-  })
+  describe.todo('root', () => {})
 })

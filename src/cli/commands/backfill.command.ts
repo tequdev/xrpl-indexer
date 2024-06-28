@@ -1,12 +1,12 @@
-import { XRPLBackfillProducer } from 'src/producers/xrpl-backfill/xrpl-backfill.producers';
-import { ConfigService } from '@nestjs/config';
-import { CommandRunner, Command, Option } from 'nest-commander';
-import configuration from 'src/config/configuration';
+import { ConfigService } from '@nestjs/config'
+import { Command, CommandRunner, Option } from 'nest-commander'
+import configuration from 'src/config/configuration'
+import { XRPLBackfillProducer } from 'src/producers/xrpl-backfill/xrpl-backfill.producers'
 
 type CommandOptions = {
-  from?: number;
+  from?: number
   to?: number
-};
+}
 
 @Command({
   name: 'backfill',
@@ -14,7 +14,10 @@ type CommandOptions = {
   subCommands: [],
 })
 export class BackfillCommand extends CommandRunner {
-  constructor(private readonly xrplBackfillProducer: XRPLBackfillProducer, private readonly config: ConfigService<typeof configuration>) {
+  constructor(
+    private readonly xrplBackfillProducer: XRPLBackfillProducer,
+    private readonly config: ConfigService<typeof configuration>,
+  ) {
     super()
   }
 
@@ -31,9 +34,9 @@ export class BackfillCommand extends CommandRunner {
     required: true,
   })
   parseFrom(val: string) {
-    const v = parseInt(val);
-    if (isNaN(v)) throw new Error('`-f / --from` should be a number');
-    return parseInt(val);
+    const v = parseInt(val)
+    if (isNaN(v)) throw new Error('`-f / --from` should be a number')
+    return parseInt(val)
   }
 
   @Option({
@@ -42,9 +45,9 @@ export class BackfillCommand extends CommandRunner {
     required: true,
   })
   parseTo(val: string) {
-    const v = parseInt(val);
-    if (isNaN(v)) throw new Error('`-t / --to` should be a number');
-    return parseInt(val);
+    const v = parseInt(val)
+    if (isNaN(v)) throw new Error('`-t / --to` should be a number')
+    return parseInt(val)
   }
 
   @Option({
@@ -52,5 +55,5 @@ export class BackfillCommand extends CommandRunner {
     description: '',
     choices: ['transaction', 'ledger'],
   })
-  parseBackfillType(val: string) { }
+  parseBackfillType(val: string) {}
 }

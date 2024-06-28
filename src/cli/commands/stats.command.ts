@@ -1,12 +1,12 @@
-import { ConfigService } from '@nestjs/config';
-import { CommandRunner, Command } from 'nest-commander';
-import configuration from 'src/config/configuration';
-import { DataStoreService } from 'src/dataStore/dataStore.service';
+import { ConfigService } from '@nestjs/config'
+import { Command, CommandRunner } from 'nest-commander'
+import configuration from 'src/config/configuration'
+import { DataStoreService } from 'src/dataStore/dataStore.service'
 
 type CommandOptions = {
-  from?: number;
+  from?: number
   to?: number
-};
+}
 
 @Command({
   name: 'stats',
@@ -14,7 +14,10 @@ type CommandOptions = {
   subCommands: [],
 })
 export class StatsCommand extends CommandRunner {
-  constructor(private readonly dataStoreService: DataStoreService, private readonly config: ConfigService<typeof configuration>) {
+  constructor(
+    private readonly dataStoreService: DataStoreService,
+    private readonly config: ConfigService<typeof configuration>,
+  ) {
     super()
   }
 
