@@ -1,4 +1,4 @@
-import { XRPLBackfillProducer } from 'src/xrpl/xrpl-backfill.producers';
+import { XRPLBackfillProducer } from 'src/producers/xrpl-backfill/xrpl-backfill.producers';
 import { ConfigService } from '@nestjs/config';
 import { CommandRunner, Command, Option } from 'nest-commander';
 import configuration from 'src/config/configuration';

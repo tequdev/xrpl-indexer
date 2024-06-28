@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { XRPLBackfillProducer } from './xrpl-backfill.producers';
-import { XRPLService } from './xrpl.service';
+import { XRPLService } from '../../xrpl/xrpl.service';
 
 @Module({
   imports: [],

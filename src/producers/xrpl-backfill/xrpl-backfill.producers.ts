@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { XRPLService } from './xrpl.service';
+import { XRPLService } from '../../xrpl/xrpl.service';
 import { ConfigService } from '@nestjs/config';
 import configuration from 'src/config/configuration';
-import { XRPLProducer } from './xrpl.producers';
+import { XRPLProducer } from '../xrpl-subscribe/xrpl-subscribe.producers';
 import { LedgerResponse } from 'src/types/xrpl';
 import { LedgerConsumerValue } from 'src/types/consumers/ledger';
 import { TransactionConsumerValue } from 'src/types/consumers/transaction';

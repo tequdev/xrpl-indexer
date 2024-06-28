@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { KafkaProducer } from 'src/kafka/kafka.producer';
-import { XRPLService } from './xrpl.service';
+import { XRPLService } from '../../xrpl/xrpl.service';
 import { ConfigService } from '@nestjs/config';
 import configuration from 'src/config/configuration';
 import { TransactionStream, LedgerStream } from 'src/types/xrpl'
