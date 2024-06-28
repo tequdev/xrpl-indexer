@@ -6,6 +6,7 @@ export class DataStoreService {
   constructor(private readonly elasticsearchService: ElasticsearchService) { }
 
   async statsIndexes() {
+    await this.elasticsearchService.indices.refresh({ index: "*" })
     return await this.elasticsearchService.cat.indices({
       v: true,
       s: ['index:asc', 'store.size:asc']

@@ -34,7 +34,7 @@ export class XRPLBackfillProducer extends XRPLProducer {
   async listen() { }
 
   async backfill() {
-    while (this.backfillOptions.from < this.backfillOptions.to) {
+    while (this.backfillOptions.from <= this.backfillOptions.to) {
       this.logger.log(`Backfilling ledger ${this.backfillOptions.from}`)
       const response = await this.xrplService.client.send({
         command: 'ledger',
