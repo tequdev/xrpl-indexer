@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { DataStoreService } from 'src/dataStore/dataStore.service'
+import { LedgerIndexer } from 'src/indexer/ledger/ledger.indexer'
 import { KafkaConsumer } from 'src/kafka/kafka.consumer'
 import { LedgerConsumerValue } from 'src/types/consumers/ledger'
 
@@ -8,14 +9,15 @@ export class LedgerConsumer extends KafkaConsumer {
   readonly consumerGroupName = 'LedgerConsumer'
   readonly consumerTopicName = 'ledger'
 
-  constructor(private readonly dataStoreService: DataStoreService) {
+  constructor(
+    private readonly dataStoreService: DataStoreService,
+    private readonly ledgerIndexer: LedgerIndexer,
+  ) {
     super()
   }
 
   handler(key: string, value: LedgerConsumerValue): void {
-    this.logger.log(`${value.ledger_index}: ${value.ledger_time_iso}`)
-
-    const indexName = `ledger-${Math.trunc(value.ledger_index / 1_000_000)}m`
-    this.dataStoreService.add(indexName, key, value)
+    const { indexName, key: indexKey, value: indexValue } = this.ledgerIndexer.handler(key, value)
+    this.dataStoreService.add(indexName, indexKey, indexValue)
   }
 }

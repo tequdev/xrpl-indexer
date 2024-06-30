@@ -19,7 +19,7 @@ type Stream =
   | 'validations'
 
 @Injectable()
-export class XRPLProducer extends KafkaProducer {
+export class XRPLSubscribeProducer extends KafkaProducer {
   producerGroupName = 'XRPLProducer'
   streams: Stream[] = ['transactions', 'ledger']
 
@@ -44,7 +44,7 @@ export class XRPLProducer extends KafkaProducer {
     })
     this.xrplService.client.on('ledger', (ledger: LedgerStream) => {
       const result = this.ledgerStreamHandler(ledger)
-      this.send('ledger', result.key.toString(), result.value satisfies LedgerConsumerValue)
+      this.send('ledger', result.key, result.value satisfies LedgerConsumerValue)
     })
   }
 
@@ -84,7 +84,7 @@ export class XRPLProducer extends KafkaProducer {
   }
   ledgerStreamHandler(ledger: LedgerStream) {
     return {
-      key: ledger.ledger_index,
+      key: ledger.ledger_hash,
       value: {
         ledger_index: ledger.ledger_index,
         ledger_hash: ledger.ledger_hash,

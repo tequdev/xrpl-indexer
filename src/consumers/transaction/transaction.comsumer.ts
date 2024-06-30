@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { DataStoreService } from 'src/dataStore/dataStore.service'
+import { TransactionIndexer } from 'src/indexer/transaction/transaction.indexer'
 import { KafkaConsumer } from 'src/kafka/kafka.consumer'
 import { TransactionConsumerValue } from 'src/types/consumers/transaction'
 
@@ -8,13 +9,19 @@ export class TransactionConsumer extends KafkaConsumer {
   readonly consumerGroupName = 'TransactionConsumer'
   readonly consumerTopicName = 'transaction'
 
-  constructor(private readonly dataStoreService: DataStoreService) {
+  constructor(
+    private readonly dataStoreService: DataStoreService,
+    private readonly transactionIdexer: TransactionIndexer,
+  ) {
     super()
   }
 
   handler(key: string, value: TransactionConsumerValue): void {
-    this.logger.log(`${value.ledger_index}: ${key}`)
-    const indexName = `transaction-${Math.trunc(value.ledger_index / 1_000_000)}m`
-    this.dataStoreService.add(indexName, key, value)
+    const {
+      indexName,
+      key: indexKey,
+      value: indexValue,
+    } = this.transactionIdexer.handler(key, value)
+    this.dataStoreService.add(indexName, indexKey, indexValue)
   }
 }

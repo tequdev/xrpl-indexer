@@ -1,11 +1,8 @@
 import { Injectable } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
-import configuration from 'src/config/configuration'
 import { LedgerConsumerValue } from 'src/types/consumers/ledger'
 import { TransactionConsumerValue } from 'src/types/consumers/transaction'
 import { LedgerResponse } from 'src/types/xrpl'
-import { XRPLService } from '../../xrpl/xrpl.service'
-import { XRPLProducer } from '../xrpl-subscribe/xrpl-subscribe.producers'
+import { XRPLSubscribeProducer } from '../xrpl-subscribe/xrpl-subscribe.producers'
 
 type Stream =
   | 'consensus'
@@ -23,7 +20,7 @@ type BackfillOptions = {
 }
 
 @Injectable()
-export class XRPLBackfillProducer extends XRPLProducer {
+export class XRPLBackfillProducer extends XRPLSubscribeProducer {
   producerGroupName = 'XRPLBackFillProducer'
   streams: Stream[] = ['transactions', 'ledger']
 
@@ -46,7 +43,7 @@ export class XRPLBackfillProducer extends XRPLProducer {
       const transactions = [...response.ledger.transactions]
       const result = this.ledgerHandler(response)
 
-      this.send('ledger', result.key.toString(), result.value satisfies LedgerConsumerValue)
+      this.send('ledger', result.key, result.value satisfies LedgerConsumerValue)
       for (const transaction of transactions) {
         const result = this.transactionHandler({
           ...transaction,
@@ -83,7 +80,7 @@ export class XRPLBackfillProducer extends XRPLProducer {
 
   ledgerHandler(ledger: LedgerResponse) {
     return {
-      key: ledger.ledger_index,
+      key: ledger.ledger_hash,
       value: {
         ledger_index: ledger.ledger_index,
         ledger_hash: ledger.ledger_hash,
