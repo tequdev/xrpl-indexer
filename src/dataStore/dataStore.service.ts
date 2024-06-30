@@ -31,16 +31,21 @@ export class DataStoreService {
   }
 
   public async deleteAllIndicesFromRange(ledger_index_from: number, ledger_index_to: number) {
-    const result = await this.elasticsearchService.deleteByQuery({
-      index: '*',
-      query: {
-        range: {
-          ledger_index: {
-            gte: ledger_index_from,
-            lte: ledger_index_to,
+    const result = await this.elasticsearchService.deleteByQuery(
+      {
+        index: '*',
+        query: {
+          range: {
+            ledger_index: {
+              gte: ledger_index_from,
+              lte: ledger_index_to,
+            },
           },
         },
       },
-    })
+      {
+        requestTimeout: 60 * 1000, // 60s
+      },
+    )
   }
 }
