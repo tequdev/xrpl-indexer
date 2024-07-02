@@ -1,12 +1,12 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import configuration from 'src/config/configuration'
+import { Configuration } from 'src/config/configuration'
 import { XrplClient } from 'xrpl-client'
 
 @Injectable()
 export class XRPLService implements OnModuleInit, OnModuleDestroy {
   client: XrplClient
-  constructor(private configService: ConfigService<typeof configuration>) {
+  constructor(private configService: ConfigService<Configuration>) {
     this.client = new XrplClient()
   }
   async onModuleInit() {

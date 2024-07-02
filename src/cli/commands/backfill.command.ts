@@ -1,6 +1,6 @@
 import { ConfigService } from '@nestjs/config'
 import { Command, CommandRunner, Option } from 'nest-commander'
-import configuration from 'src/config/configuration'
+import { Configuration } from 'src/config/configuration'
 import { XRPLBackfillProducer } from 'src/producers/xrpl-backfill/xrpl-backfill.producers'
 
 type CommandOptions = {
@@ -16,7 +16,7 @@ type CommandOptions = {
 export class BackfillCommand extends CommandRunner {
   constructor(
     private readonly xrplBackfillProducer: XRPLBackfillProducer,
-    private readonly config: ConfigService<typeof configuration>,
+    private readonly config: ConfigService<Configuration>,
   ) {
     super()
   }

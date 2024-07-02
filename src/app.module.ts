@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
+import configuration from './config/configuration'
 import { ConsumersModule } from './consumers/consumers.module'
 import { XRPLSubscribeModule } from './producers/xrpl-subscribe/xrpl-subscribe.module'
 
@@ -9,6 +10,7 @@ import { XRPLSubscribeModule } from './producers/xrpl-subscribe/xrpl-subscribe.m
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      load: [configuration],
     }),
     ConsumersModule,
     XRPLSubscribeModule,

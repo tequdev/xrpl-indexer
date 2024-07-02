@@ -1,5 +1,7 @@
 import { Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { Consumer, Kafka, KafkaMessage } from 'kafkajs'
+import { Configuration } from 'src/config/configuration'
 
 /**
  * Base class for KafkaConsumer
@@ -21,9 +23,9 @@ export abstract class KafkaConsumer implements OnModuleInit, OnModuleDestroy {
   /**
    * Constructor
    */
-  constructor() {
+  constructor(private readonly config: ConfigService<Configuration>) {
     this.kafka = new Kafka({
-      brokers: process.env.BROKER_ENDPOINTS?.split(',') ?? ['localhost:9093'],
+      brokers: this.config.get('KAFKA_BROKER_ENDPOINTS'),
     })
   }
 

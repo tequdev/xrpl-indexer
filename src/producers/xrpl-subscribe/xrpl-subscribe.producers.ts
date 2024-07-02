@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import configuration from 'src/config/configuration'
+import { Configuration } from 'src/config/configuration'
 import { KafkaProducer } from 'src/kafka/kafka.producer'
 import { LedgerConsumerValue } from 'src/types/consumers/ledger'
 import { TransactionConsumerValue } from 'src/types/consumers/transaction'
@@ -28,9 +28,9 @@ export class XRPLSubscribeProducer extends KafkaProducer {
    */
   constructor(
     protected xrplService: XRPLService,
-    protected configService: ConfigService<typeof configuration>,
+    protected configService: ConfigService<Configuration>,
   ) {
-    super()
+    super(configService)
   }
 
   async listen() {

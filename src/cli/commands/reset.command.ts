@@ -1,6 +1,6 @@
 import { ConfigService } from '@nestjs/config'
 import { Command, CommandRunner, Option } from 'nest-commander'
-import configuration from 'src/config/configuration'
+import { Configuration } from 'src/config/configuration'
 import { DataStoreService } from 'src/dataStore/dataStore.service'
 
 type CommandOptions = {
@@ -16,7 +16,7 @@ type CommandOptions = {
 export class ResetCommand extends CommandRunner {
   constructor(
     private readonly dataStoreService: DataStoreService,
-    private readonly config: ConfigService<typeof configuration>,
+    private readonly config: ConfigService<Configuration>,
   ) {
     super()
   }

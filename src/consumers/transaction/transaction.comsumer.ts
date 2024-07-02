@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { DataStoreService } from 'src/dataStore/dataStore.service'
 import { TransactionIndexer } from 'src/indexer/transaction/transaction.indexer'
 import { KafkaConsumer } from 'src/kafka/kafka.consumer'
@@ -12,8 +13,9 @@ export class TransactionConsumer extends KafkaConsumer {
   constructor(
     private readonly dataStoreService: DataStoreService,
     private readonly transactionIdexer: TransactionIndexer,
+    private readonly configService: ConfigService,
   ) {
-    super()
+    super(configService)
   }
 
   handler(key: string, value: TransactionConsumerValue): void {
