@@ -1,9 +1,11 @@
-import { LedgerConsumerValue } from 'src/types/consumers/ledger'
+import type { LedgerHandler } from 'src/types/indexer'
 
-export default (ledger_hash: string, ledger: LedgerConsumerValue) => {
+const handler: LedgerHandler = (ledger_hash, ledger) => {
   return {
     indexName: `ledger-${Math.trunc(ledger.ledger_index / 1_000_000)}m`,
     key: ledger_hash,
     value: ledger,
   }
 }
+
+export default handler
