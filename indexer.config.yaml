@@ -1,0 +1,6 @@
+KAFKA_BROKER_ENDPOINTS: 
+  - localhost:9093
+ELASTICSEARCH_NODE: 
+  - http://localhost:9200
+TRANSACTION_HANDLER_PATH: dist/handler/transactionHandler
+LEDGER_HANDLER_PATH: dist/handler/ledgerHandler

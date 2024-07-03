@@ -1,12 +1,24 @@
-const configuration = () => ({
-  amount_type_fields: [] as string[],
-  native_currency_code: 'XRP' as string,
-  KAFKA_BROKER_ENDPOINTS: ['localhost:9093'] as string[],
-  ELASTICSEARCH_NODE: ['http://localhost:9200'] as string[],
-  TRANSACTION_HANDLER_PATH: 'dist/handler/transactionHandler' as string,
-  LEDGER_HANDLER_PATH: 'dist/handler/ledgerHandler' as string,
-})
+import { readFileSync } from 'node:fs'
+import * as yaml from 'js-yaml'
+// use require instead on import
+const appRoot = require('app-root-path')
 
-export default configuration
+const YAML_CONFIG_FILENAME = 'indexer.config.yaml'
 
-export type Configuration = ReturnType<typeof configuration>
+type Config = {
+  KAFKA_BROKER_ENDPOINTS: string[]
+  ELASTICSEARCH_NODE: string[]
+  TRANSACTION_HANDLER_PATH: string
+  LEDGER_HANDLER_PATH: string
+}
+
+type GlobalValues = {
+  amount_type_fields: string[]
+  native_currency_code: string
+}
+
+export type Configuration = Config & GlobalValues
+
+export default () => {
+  return yaml.load(readFileSync(appRoot.resolve(YAML_CONFIG_FILENAME), 'utf8')) as Configuration
+}
