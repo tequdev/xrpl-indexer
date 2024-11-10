@@ -19,11 +19,9 @@ export class TransactionConsumer extends KafkaConsumer {
   }
 
   handler(key: string, value: TransactionConsumerValue): void {
-    const {
-      indexName,
-      key: indexKey,
-      value: indexValue,
-    } = this.transactionIdexer.handler(key, value)
+    const handlerResult = this.transactionIdexer.handler(key, value)
+    if (handlerResult === null) return
+    const { indexName, key: indexKey, value: indexValue } = handlerResult
     this.dataStoreService.add(indexName, indexKey, indexValue)
   }
 }

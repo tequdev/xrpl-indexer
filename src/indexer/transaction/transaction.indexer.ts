@@ -11,7 +11,7 @@ export class TransactionIndexer extends BaseIndexer {
   }
 
   handler(tx_hash: string, transaction: TransactionConsumerValue) {
-    this.logger.debug(`${transaction.ledger_index}: ${tx_hash}`)
-    return this.loadedHandler(tx_hash, transaction)
+    // this.logger.debug(`${transaction.ledger_index}: ${tx_hash}`)
+    return this.loadedHandler(tx_hash, transaction, this.logger)
   }
 }

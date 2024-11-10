@@ -8,11 +8,12 @@ export abstract class BaseIndexer {
   public loadedHandler: (
     key: string,
     value: unknown,
+    logger: Logger,
   ) => {
     indexName: string
     key: string
     value: unknown
-  }
+  } | null
 
   constructor(indexerPath: string) {
     const path = appRoot.resolve(indexerPath)
@@ -31,5 +32,5 @@ export abstract class BaseIndexer {
     indexName: string
     key: string
     value: unknown
-  }
+  } | null
 }

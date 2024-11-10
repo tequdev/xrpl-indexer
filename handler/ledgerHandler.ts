@@ -1,6 +1,6 @@
 import type { LedgerHandler } from 'src/types/indexer'
 
-const handler: LedgerHandler = (ledger_hash, ledger) => {
+const handler: LedgerHandler = (ledger_hash, ledger, logger) => {
   return {
     indexName: `ledger-${Math.trunc(ledger.ledger_index / 1_000_000)}m`,
     key: ledger_hash,
