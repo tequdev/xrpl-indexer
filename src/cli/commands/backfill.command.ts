@@ -4,8 +4,8 @@ import { Configuration } from 'src/config/configuration'
 import { XRPLBackfillProducer } from 'src/producers/xrpl-backfill/xrpl-backfill.producers'
 
 type CommandOptions = {
-  from?: number
-  to?: number
+  from: number
+  to: number
 }
 
 @Command({

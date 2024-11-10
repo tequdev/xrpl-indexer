@@ -20,7 +20,7 @@ export class LedgerConsumer extends KafkaConsumer {
 
   handler(key: string, value: LedgerConsumerValue): void {
     const handlerResult = this.ledgerIndexer.handler(key, value)
-    if (handlerResult === null) return
+    if (!handlerResult) return
     const { indexName, key: indexKey, value: indexValue } = handlerResult
     this.dataStoreService.add(indexName, indexKey, indexValue)
   }

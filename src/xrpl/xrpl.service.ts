@@ -11,6 +11,7 @@ export class XRPLService implements OnModuleInit, OnModuleDestroy {
   }
   async onModuleInit() {
     const definitions = await this.client.definitions()
+    if (!definitions) throw new Error('Failed to get definitions')
     const amountFields = [
       ...definitions.FIELDS.filter((f) => f[1].type === 'Amount').map((f) => f[0]),
       'DeliverMax',

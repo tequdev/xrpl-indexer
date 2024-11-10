@@ -4,8 +4,8 @@ import { Configuration } from 'src/config/configuration'
 import { DataStoreService } from 'src/dataStore/dataStore.service'
 
 type CommandOptions = {
-  from?: number
-  to?: number
+  from: number
+  to: number
 }
 
 @Command({

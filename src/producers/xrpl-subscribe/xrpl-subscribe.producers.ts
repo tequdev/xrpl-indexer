@@ -50,10 +50,14 @@ export class XRPLSubscribeProducer extends KafkaProducer {
   }
 
   get amountTypeFields() {
-    return this.configService.get<string>('amount_type_fields').split(',')
+    const amountTypeFields = this.configService.get<string>('amount_type_fields')
+    if (!amountTypeFields) throw new Error('Amount type fields are not set')
+    return amountTypeFields.split(',')
   }
   get nativeCurrencyCode() {
-    return this.configService.get('native_currency_code')
+    const nativeCurrencyCode = this.configService.get<string>('native_currency_code')
+    if (!nativeCurrencyCode) throw new Error('Native currency code is not set')
+    return nativeCurrencyCode
   }
 
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -75,12 +79,15 @@ export class XRPLSubscribeProducer extends KafkaProducer {
 
   transactionStreamHandler(data: TransactionStream) {
     return {
-      key: data.transaction.hash,
+      // biome-ignore lint/style/noNonNullAssertion: <explanation>
+      key: data.transaction.hash!,
       value: {
         transaction: this.replaceNativeAmountFields(data.transaction) as unknown as Transaction,
-        ledger_index: data.ledger_index,
+        // biome-ignore lint/style/noNonNullAssertion: <explanation>
+        ledger_index: data.ledger_index!,
         close_time_iso: data.close_time_iso,
-        meta: this.replaceNativeAmountFields(data.meta) as unknown as TransactionMetadata,
+        // biome-ignore lint/style/noNonNullAssertion: <explanation>
+        meta: this.replaceNativeAmountFields(data.meta!) as unknown as TransactionMetadata,
       } satisfies TransactionConsumerValue,
     }
   }

@@ -24,9 +24,9 @@ export abstract class KafkaConsumer implements OnModuleInit, OnModuleDestroy {
    * Constructor
    */
   constructor(private readonly config: ConfigService<Configuration>) {
-    this.kafka = new Kafka({
-      brokers: this.config.get('KAFKA_BROKER_ENDPOINTS'),
-    })
+    const brokers = this.config.get<string[]>('KAFKA_BROKER_ENDPOINTS')
+    if (!brokers) throw new Error('config: KAFKA_BROKER_ENDPOINTS are not set')
+    this.kafka = new Kafka({ brokers })
   }
 
   async onModuleInit() {
@@ -89,7 +89,8 @@ export abstract class KafkaConsumer implements OnModuleInit, OnModuleDestroy {
   private execute(partition: number, message: KafkaMessage): void {
     this.actionBeforeHandler()
     if (this.isUniqueProcess()) {
-      this.handler(message.key.toString(), JSON.parse(message.value.toString()))
+      // biome-ignore lint/style/noNonNullAssertion: <explanation>
+      this.handler(message.key!.toString(), JSON.parse(message.value!.toString()))
     } else {
       this.logger.warn(`Duplicate processing of ${this.consumerGroupName}`)
     }

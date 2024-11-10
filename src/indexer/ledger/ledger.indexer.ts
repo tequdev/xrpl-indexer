@@ -7,7 +7,9 @@ import { BaseIndexer, HandlerResultBase } from '../base.indexer'
 @Injectable()
 export class LedgerIndexer extends BaseIndexer {
   constructor(config: ConfigService<Configuration>) {
-    super(config.get('LEDGER_HANDLER_PATH'))
+    const ledgerHandlerPath = config.get<string>('LEDGER_HANDLER_PATH')
+    if (!ledgerHandlerPath) throw new Error('config: LEDGER_HANDLER_PATH is not set')
+    super(ledgerHandlerPath)
   }
 
   handler(ledger_hash: string, ledger: LedgerConsumerValue) {

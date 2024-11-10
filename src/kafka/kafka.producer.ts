@@ -23,9 +23,9 @@ export abstract class KafkaProducer implements OnModuleInit, OnModuleDestroy {
    * Constructor
    */
   constructor(private readonly config: ConfigService<Configuration>) {
-    this.kafka = new Kafka({
-      brokers: this.config.get('KAFKA_BROKER_ENDPOINTS'),
-    })
+    const brokers = this.config.get<string[]>('KAFKA_BROKER_ENDPOINTS')
+    if (!brokers) throw new Error('config: KAFKA_BROKER_ENDPOINTS are not set')
+    this.kafka = new Kafka({ brokers })
   }
 
   async onModuleInit() {
