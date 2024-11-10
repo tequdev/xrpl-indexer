@@ -1,4 +1,6 @@
-KAFKA_BROKER_ENDPOINTS: 
+XRPLD_NODE_WSS:
+  - wss://xrplcluster.com
+KAFKA_BROKER_ENDPOINTS:
   - localhost:9093
 ELASTICSEARCH_NODE: 
   - http://localhost:9200

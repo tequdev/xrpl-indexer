@@ -6,6 +6,7 @@ const appRoot = require('app-root-path')
 const YAML_CONFIG_FILENAME = 'indexer.config.yaml'
 
 type Config = {
+  XRPLD_NODE_WSS: string[]
   KAFKA_BROKER_ENDPOINTS: string[]
   ELASTICSEARCH_NODE: string[]
   TRANSACTION_HANDLER_PATH: string
