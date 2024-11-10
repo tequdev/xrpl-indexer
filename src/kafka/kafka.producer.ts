@@ -44,7 +44,7 @@ export abstract class KafkaProducer implements OnModuleInit, OnModuleDestroy {
     await this.producer.disconnect()
   }
 
-  public send(producerTopicName: string, key: string, value: Record<string, any>) {
+  public send(producerTopicName: string, key: string, value: Record<string, unknown>) {
     this.producer.send({
       topic: producerTopicName,
       messages: [{ key: key, value: JSON.stringify(value) }],

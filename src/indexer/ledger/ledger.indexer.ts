@@ -11,7 +11,7 @@ export class LedgerIndexer extends BaseIndexer {
   }
 
   handler(ledger_hash: string, ledger: LedgerConsumerValue) {
-    this.logger.log(`${ledger.ledger_index}: ${ledger.ledger_time_iso}`)
+    this.logger.debug(`${ledger.ledger_index}: ${ledger.ledger_time_iso}`)
     return this.loadedHandler(ledger_hash, ledger)
   }
 }

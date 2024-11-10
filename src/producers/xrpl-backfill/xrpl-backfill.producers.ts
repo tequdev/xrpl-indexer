@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { LedgerConsumerValue } from 'src/types/consumers/ledger'
 import { TransactionConsumerValue } from 'src/types/consumers/transaction'
 import { LedgerResponse } from 'src/types/xrpl'
+import { Transaction, TransactionMetadata } from 'xrpl'
 import { XRPLSubscribeProducer } from '../xrpl-subscribe/xrpl-subscribe.producers'
 
 type Stream =
@@ -70,10 +71,10 @@ export class XRPLBackfillProducer extends XRPLSubscribeProducer {
     return {
       key: data.hash,
       value: {
-        ...this.replaceNativeAmountFields(data),
+        transaction: this.replaceNativeAmountFields(data) as unknown as Transaction,
         ledger_index: data.ledger_index,
         close_time_iso: data.close_time_iso,
-        meta: this.replaceNativeAmountFields(meta),
+        meta: this.replaceNativeAmountFields(meta) as unknown as TransactionMetadata,
       } satisfies TransactionConsumerValue,
     }
   }

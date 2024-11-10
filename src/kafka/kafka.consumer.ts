@@ -58,7 +58,7 @@ export abstract class KafkaConsumer implements OnModuleInit, OnModuleDestroy {
   /**
    * Handler processing
    */
-  abstract handler(key: string, value: any): void
+  abstract handler(key: string, value: unknown): void
 
   /**
    * Handler pre-processing

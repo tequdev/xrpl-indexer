@@ -6,6 +6,7 @@ import { LedgerConsumerValue } from 'src/types/consumers/ledger'
 import { TransactionConsumerValue } from 'src/types/consumers/transaction'
 import { LedgerStream, TransactionStream } from 'src/types/xrpl'
 import { rippleEpochToISO } from 'src/utils/xrpl'
+import { Transaction, TransactionMetadata } from 'xrpl'
 import { XRPLService } from '../../xrpl/xrpl.service'
 
 type Stream =
@@ -49,13 +50,14 @@ export class XRPLSubscribeProducer extends KafkaProducer {
   }
 
   get amountTypeFields() {
-    return this.configService.get('amount_type_fields').split(',')
+    return this.configService.get<string>('amount_type_fields').split(',')
   }
   get nativeCurrencyCode() {
     return this.configService.get('native_currency_code')
   }
 
-  replaceNativeAmountFields(target: any) {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  replaceNativeAmountFields(target: Record<string, any>) {
     if (typeof target === 'object') {
       for (const key in target) {
         if (typeof target[key] === 'object') {
@@ -75,10 +77,10 @@ export class XRPLSubscribeProducer extends KafkaProducer {
     return {
       key: data.transaction.hash,
       value: {
-        ...this.replaceNativeAmountFields(data.transaction),
+        transaction: this.replaceNativeAmountFields(data.transaction) as unknown as Transaction,
         ledger_index: data.ledger_index,
         close_time_iso: data.close_time_iso,
-        meta: this.replaceNativeAmountFields(data.meta),
+        meta: this.replaceNativeAmountFields(data.meta) as unknown as TransactionMetadata,
       } satisfies TransactionConsumerValue,
     }
   }

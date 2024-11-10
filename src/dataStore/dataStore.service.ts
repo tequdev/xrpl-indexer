@@ -13,7 +13,7 @@ export class DataStoreService {
     })
   }
 
-  async add(indexName: string, key: string, value: any) {
+  async add(indexName: string, key: string, value: unknown) {
     await this.elasticsearchService.index(
       {
         index: indexName,
