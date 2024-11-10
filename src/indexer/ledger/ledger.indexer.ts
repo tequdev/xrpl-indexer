@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Configuration } from 'src/config/configuration'
 import { LedgerConsumerValue } from 'src/types/consumers/ledger'
-import { BaseIndexer } from '../base.indexer'
+import { BaseIndexer, HandlerResultBase } from '../base.indexer'
 
 @Injectable()
 export class LedgerIndexer extends BaseIndexer {
@@ -12,6 +12,6 @@ export class LedgerIndexer extends BaseIndexer {
 
   handler(ledger_hash: string, ledger: LedgerConsumerValue) {
     // this.logger.debug(`${ledger.ledger_index}: ${ledger.ledger_time_iso}`)
-    return this.loadedHandler(ledger_hash, ledger, this.logger)
+    return this.loadedHandler<HandlerResultBase>(ledger_hash, ledger, this.logger)
   }
 }
