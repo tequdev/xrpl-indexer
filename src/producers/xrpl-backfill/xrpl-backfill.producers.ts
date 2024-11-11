@@ -33,13 +33,17 @@ export class XRPLBackfillProducer extends XRPLSubscribeProducer {
   async listen() {}
 
   async backfill() {
-    while (this.backfillOptions.from <= this.backfillOptions.to) {
-      this.logger.log(`Backfilling ledger ${this.backfillOptions.from}`)
+    let completed = 0
+    const from = this.backfillOptions.from
+    const to = this.backfillOptions.to
+    const startTime = Date.now()
+    while (from <= to) {
+      this.logger.debug(`Backfilling ledger ${from}`)
       const response = (await this.xrplService.client.send({
         command: 'ledger',
         transactions: true,
         expand: true,
-        ledger_index: this.backfillOptions.from,
+        ledger_index: from + completed + 1,
       })) as LedgerResponse
       const transactions = [...response.ledger.transactions]
       const result = this.ledgerHandler(response)
@@ -51,10 +55,19 @@ export class XRPLBackfillProducer extends XRPLSubscribeProducer {
           ledger_index: response.ledger_index,
           close_time_iso: response.ledger.close_time_iso,
         })
-        // console.log(JSON.stringify(result, null, 2))
         this.send('transaction', result.key, result.value)
       }
-      this.backfillOptions.from += 1
+      completed += 1
+      if (completed % 1000 === 0) {
+        const elapsedTime = Date.now() - startTime
+        const remainingTime = (to - from - completed) * (elapsedTime / completed)
+        const percentage = Math.round((completed / (to - from)) * 100)
+        const elapsedTimeMinutes = Math.round(elapsedTime / 1000 / 60)
+        const remainingTimeMinutes = Math.round(remainingTime / 1000 / 60)
+        this.logger.log(
+          `Completed ${completed} ledgers from ${from} to ${to}: ${percentage}% in ${elapsedTimeMinutes}min, remaining: ${remainingTimeMinutes}min`,
+        )
+      }
     }
     this.logger.log('Backfilling complete')
     process.exit(0)

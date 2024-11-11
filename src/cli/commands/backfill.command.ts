@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Command, CommandRunner, Option } from 'nest-commander'
 import { Configuration } from 'src/config/configuration'
@@ -14,6 +15,7 @@ type CommandOptions = {
   subCommands: [],
 })
 export class BackfillCommand extends CommandRunner {
+  public readonly logger: Logger = new Logger()
   constructor(
     private readonly xrplBackfillProducer: XRPLBackfillProducer,
     private readonly config: ConfigService<Configuration>,
@@ -22,8 +24,8 @@ export class BackfillCommand extends CommandRunner {
   }
 
   async run(inputs: string[], options: CommandOptions): Promise<void> {
-    console.log('Running BackfillCommand')
-    console.log('Options:', options)
+    this.logger.log('Running BackfillCommand')
+    this.logger.log(`from: ${options.from}, to: ${options.to}`)
     this.xrplBackfillProducer.setOptions({ from: options.from, to: options.to })
     await this.xrplBackfillProducer.backfill()
   }
